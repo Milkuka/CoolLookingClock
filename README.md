@@ -1,4 +1,5 @@
  ***A cool looking clock***
+ 
  A fun little project that tries to improve on the iPhone’s StandBy (nightstand) mode. It’s a full-screen, glowing digital clock for a phone, tablet or any screen you want to leave on a desk or nightstand. Made as a fun side project, mostly with Gemini, plus a bit of help from ChatGPT and Claude.
 
 
