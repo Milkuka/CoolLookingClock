@@ -1,0 +1,430 @@
+:root {
+  --custom-primary: #6366f1;
+  --custom-secondary: #a855f7;
+  --glow-size: 12px;
+}
+
+body,
+html {
+  background-color: #000000;
+  color: #ffffff;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: 'Fredoka', sans-serif;
+}
+
+@keyframes floatDigit1 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(3px, -5px) rotate(0.4deg); }
+  50% { transform: translate(-4px, 3px) rotate(-0.3deg); }
+  75% { transform: translate(2px, -3px) rotate(0.2deg); }
+}
+
+@keyframes floatDigit2 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(-4px, -3px) rotate(-0.5deg); }
+  50% { transform: translate(3px, 5px) rotate(0.3deg); }
+  75% { transform: translate(-2px, -4px) rotate(-0.2deg); }
+}
+
+@keyframes floatColon {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  33% { transform: translate(2px, 4px) rotate(0.3deg); }
+  66% { transform: translate(-3px, -3px) rotate(-0.4deg); }
+}
+
+@keyframes floatDigit3 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(4px, 3px) rotate(0.3deg); }
+  50% { transform: translate(-2px, -5px) rotate(-0.4deg); }
+  75% { transform: translate(3px, 2px) rotate(0.2deg); }
+}
+
+@keyframes floatDigit4 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(-3px, 4px) rotate(-0.3deg); }
+  50% { transform: translate(4px, -2px) rotate(0.5deg); }
+  75% { transform: translate(-4px, 3px) rotate(-0.2deg); }
+}
+
+@keyframes floatDigit5 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(1px, -1.5px) rotate(0.15deg); }
+  50% { transform: translate(-1px, 1.5px) rotate(-0.1deg); }
+  75% { transform: translate(1.5px, -1px) rotate(0.1deg); }
+}
+
+@keyframes floatDigit6 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(-1.5px, 1px) rotate(-0.15deg); }
+  50% { transform: translate(1px, -1.5px) rotate(0.15deg); }
+  75% { transform: translate(-1px, 1px) rotate(-0.1deg); }
+}
+
+@keyframes floatDateChar1 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(1.5px, -2px) rotate(0.3deg); }
+  50% { transform: translate(-2px, 1.5px) rotate(-0.2deg); }
+  75% { transform: translate(1px, -1px) rotate(0.1deg); }
+}
+
+@keyframes floatDateChar2 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(-2px, -1.5px) rotate(-0.4deg); }
+  50% { transform: translate(1.5px, 2px) rotate(0.3deg); }
+  75% { transform: translate(-1px, -1.5px) rotate(-0.15deg); }
+}
+
+@keyframes floatDateChar3 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(2px, 1px) rotate(0.2deg); }
+  50% { transform: translate(-1px, -2px) rotate(-0.3deg); }
+  75% { transform: translate(1.5px, 1px) rotate(0.2deg); }
+}
+
+@keyframes floatDateChar4 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(-1.5px, 2px) rotate(-0.2deg); }
+  50% { transform: translate(2px, -1px) rotate(0.4deg); }
+  75% { transform: translate(-2px, 1.5px) rotate(-0.1deg); }
+}
+
+.date-char {
+  display: inline-block;
+  will-change: transform, text-shadow;
+}
+
+.date-char-1 {
+  animation: floatDateChar1 9s ease-in-out infinite;
+}
+
+.date-char-2 {
+  animation: floatDateChar2 11s ease-in-out infinite;
+}
+
+.date-char-3 {
+  animation: floatDateChar3 10s ease-in-out infinite;
+}
+
+.date-char-4 {
+  animation: floatDateChar4 12s ease-in-out infinite;
+}
+
+.digits-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 0.8;
+  font-weight: 700;
+  gap: 0;
+}
+
+.hours-group,
+.minutes-group {
+  display: flex;
+  align-items: center;
+}
+
+.seconds-group {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 102%;
+  bottom: 10%;
+}
+
+.digit {
+  display: inline-block;
+  position: relative;
+  width: 0.62em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  mix-blend-mode: screen;
+  opacity: 0.92;
+  transition:
+    color 0.4s ease,
+    transform 0.2s ease,
+    text-shadow 0.2s ease;
+  letter-spacing: -0.05em;
+  text-shadow: 0 0 var(--glow-size) currentColor;
+  font-size: 35vw;
+}
+
+.digit.overlaps {
+  margin-left: -0.12em;
+}
+
+#digit-h1 {
+  animation: floatDigit1 11s ease-in-out infinite;
+}
+
+#digit-h2 {
+  animation: floatDigit2 14s ease-in-out infinite 0.5s;
+}
+
+.colon {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35em;
+  margin: 0 -0.12em 0 -0.04em;
+  padding: 0;
+  z-index: 5;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  font-size: 15.75vw;
+  animation: floatColon 12s ease-in-out infinite 0.2s;
+}
+
+#digit-m1 {
+  animation: floatDigit3 13s ease-in-out infinite 0.8s;
+}
+
+#digit-m2 {
+  animation: floatDigit4 15s ease-in-out infinite 0.3s;
+}
+
+#digit-s1 {
+  animation: floatDigit5 12s ease-in-out infinite 0.4s;
+  font-size: 6vw !important;
+}
+
+#digit-s2 {
+  animation: floatDigit6 14s ease-in-out infinite 0.9s;
+  font-size: 6vw !important;
+}
+
+.colon-dot {
+  width: 0.32em;
+  height: 0.32em;
+  border-radius: 50%;
+  background-color: currentColor;
+  box-shadow: 0 0 var(--glow-size) currentColor;
+}
+
+.theme-custom .digit,
+.theme-custom .colon-dot,
+.theme-custom #date-display,
+.theme-custom #ampm-display {
+  color: var(--custom-primary);
+  text-shadow: 0 0 var(--glow-size) var(--custom-primary);
+}
+
+.theme-custom .digit:nth-child(even) {
+  color: var(--custom-secondary);
+  text-shadow: 0 0 var(--glow-size) var(--custom-secondary);
+}
+
+.theme-blue .digit,
+.theme-blue .colon-dot,
+.theme-blue #date-display,
+.theme-blue #ampm-display {
+  color: #1e6bfb;
+  text-shadow: 0 0 var(--glow-size) #1e6bfb;
+}
+
+.theme-blue .digit:nth-child(even) {
+  color: #3b82f6;
+  text-shadow: 0 0 var(--glow-size) #3b82f6;
+}
+
+.theme-standby-orange .digit,
+.theme-standby-orange .colon-dot,
+.theme-standby-orange #date-display,
+.theme-standby-orange #ampm-display {
+  color: #f97316;
+  text-shadow: 0 0 var(--glow-size) #f97316;
+}
+
+.theme-standby-orange .digit:nth-child(even) {
+  color: #fb923c;
+  text-shadow: 0 0 var(--glow-size) #fb923c;
+}
+
+.theme-neon-green .digit,
+.theme-neon-green .colon-dot,
+.theme-neon-green #date-display,
+.theme-neon-green #ampm-display {
+  color: #10b981;
+  text-shadow: 0 0 var(--glow-size) #10b981;
+}
+
+.theme-neon-green .digit:nth-child(even) {
+  color: #34d399;
+  text-shadow: 0 0 var(--glow-size) #34d399;
+}
+
+.theme-pink .digit,
+.theme-pink .colon-dot,
+.theme-pink #date-display,
+.theme-pink #ampm-display {
+  color: #ec4899;
+  text-shadow: 0 0 var(--glow-size) #ec4899;
+}
+
+.theme-pink .digit:nth-child(even) {
+  color: #f472b6;
+  text-shadow: 0 0 var(--glow-size) #f472b6;
+}
+
+.theme-sunset-amber .digit,
+.theme-sunset-amber .colon-dot,
+.theme-sunset-amber #date-display,
+.theme-sunset-amber #ampm-display {
+  color: #f59e0b;
+  text-shadow: 0 0 var(--glow-size) #f59e0b;
+}
+
+.theme-sunset-amber .digit:nth-child(even) {
+  color: #fbbf24;
+  text-shadow: 0 0 var(--glow-size) #fbbf24;
+}
+
+.theme-electric-violet .digit,
+.theme-electric-violet .colon-dot,
+.theme-electric-violet #date-display,
+.theme-electric-violet #ampm-display {
+  color: #a855f7;
+  text-shadow: 0 0 var(--glow-size) #a855f7;
+}
+
+.theme-electric-violet .digit:nth-child(even) {
+  color: #c084fc;
+  text-shadow: 0 0 var(--glow-size) #c084fc;
+}
+
+.theme-mint-emerald .digit,
+.theme-mint-emerald .colon-dot,
+.theme-mint-emerald #date-display,
+.theme-mint-emerald #ampm-display {
+  color: #14b8a6;
+  text-shadow: 0 0 var(--glow-size) #14b8a6;
+}
+
+.theme-mint-emerald .digit:nth-child(even) {
+  color: #2dd4bf;
+  text-shadow: 0 0 var(--glow-size) #2dd4bf;
+}
+
+.theme-solar-yellow .digit,
+.theme-solar-yellow .colon-dot,
+.theme-solar-yellow #date-display,
+.theme-solar-yellow #ampm-display {
+  color: #eab308;
+  text-shadow: 0 0 var(--glow-size) #eab308;
+}
+
+.theme-solar-yellow .digit:nth-child(even) {
+  color: #fde047;
+  text-shadow: 0 0 var(--glow-size) #fde047;
+}
+
+.theme-oled-red .digit,
+.theme-oled-red .colon-dot,
+.theme-oled-red #date-display,
+.theme-oled-red #ampm-display {
+  color: #ef4444;
+  text-shadow: 0 0 var(--glow-size) #ef4444;
+}
+
+.theme-oled-red .digit:nth-child(even) {
+  color: #f87171;
+  text-shadow: 0 0 var(--glow-size) #f87171;
+}
+
+.theme-cyber-cyan .digit,
+.theme-cyber-cyan .colon-dot,
+.theme-cyber-cyan #date-display,
+.theme-cyber-cyan #ampm-display {
+  color: #06b6d4;
+  text-shadow: 0 0 var(--glow-size) #06b6d4;
+}
+
+.theme-cyber-cyan .digit:nth-child(even) {
+  color: #38bdf8;
+  text-shadow: 0 0 var(--glow-size) #38bdf8;
+}
+
+#date-display {
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+#date-display .date-char {
+  color: inherit;
+  text-shadow:
+    0 0 2px currentColor,
+    0 0 5px currentColor;
+  transition:
+    text-shadow 0.4s ease,
+    opacity 0.4s ease;
+  will-change: transform, text-shadow;
+}
+
+#date-display .date-char-1 {
+  filter: brightness(1.2);
+}
+
+#date-display .date-char-2 {
+  filter: brightness(1.05);
+}
+
+#date-display .date-char-3 {
+  filter: brightness(1.15);
+}
+
+#date-display .date-char-4 {
+  filter: brightness(1.1);
+}
+
+@keyframes timeBreathing {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.025);
+    filter: brightness(1.18);
+  }
+}
+
+#clock-display.breathing-enabled {
+  animation: timeBreathing 8s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform, filter;
+}
+
+.controls-overlay {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.top-overlay.controls-hidden {
+  opacity: 0;
+  transform: translateY(-40px);
+  pointer-events: none;
+}
+
+.bottom-overlay.controls-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  pointer-events: none;
+}
+
+input[type="range"] {
+  accent-color: #3b82f6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #clock-display.breathing-enabled {
+    animation: none;
+  }
+}

@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StandBy Overlapping Clock</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@900&family=Outfit:wght@900&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen relative overflow-hidden" id="app-body">
+
+  <main class="digits-container theme-blue" id="clock-display">
+    <div class="hours-group">
+      <div id="digit-h1" class="digit">-</div>
+      <div id="digit-h2" class="digit overlaps">-</div>
+    </div>
+
+    <div id="colon" class="colon">
+      <div class="colon-dot"></div>
+      <div class="colon-dot"></div>
+    </div>
+
+    <div class="minutes-group">
+      <div id="digit-m1" class="digit">-</div>
+      <div id="digit-m2" class="digit overlaps">-</div>
+    </div>
+
+    <div id="seconds-wrapper" class="seconds-group flex">
+      <div id="digit-s1" class="digit">-</div>
+      <div id="digit-s2" class="digit overlaps">-</div>
+    </div>
+  </main>
+
+  <header id="top-bar" class="controls-overlay top-overlay fixed top-6 left-0 right-0 px-8 flex justify-between items-center font-medium z-20">
+    <div id="date-display" class="tracking-wide uppercase font-bold text-lg md:text-2xl transition-colors duration-400 flex flex-nowrap gap-[0.02em]">
+      Loading date...
+    </div>
+    <div id="ampm-display" class="font-bold text-xl md:text-2xl transition-colors duration-400"></div>
+  </header>
+
+  <footer id="bottom-controls" class="controls-overlay bottom-overlay fixed bottom-6 left-0 right-0 px-6 flex justify-center items-center z-30">
+    <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 rounded-full px-5 py-3 flex items-center gap-3 md:gap-4 shadow-2xl text-zinc-300 text-sm max-w-[95vw] relative">
+
+      <div class="flex items-center gap-2 pr-3 border-r border-zinc-700/60 shrink-0">
+        <button onclick="setTheme('theme-blue')" class="w-6 h-6 rounded-full bg-blue-500 hover:scale-110 transition-transform focus:outline-none ring-2 ring-white/20" title="Vibrant Blue"></button>
+        <button onclick="setTheme('theme-standby-orange')" class="w-6 h-6 rounded-full bg-orange-500 hover:scale-110 transition-transform focus:outline-none" title="StandBy Orange"></button>
+        <button onclick="setTheme('theme-neon-green')" class="w-6 h-6 rounded-full bg-emerald-500 hover:scale-110 transition-transform focus:outline-none" title="Neon Green"></button>
+        <button onclick="setTheme('theme-pink')" class="w-6 h-6 rounded-full bg-pink-500 hover:scale-110 transition-transform focus:outline-none" title="Pure Pink"></button>
+        <button onclick="setTheme('theme-sunset-amber')" class="w-6 h-6 rounded-full bg-amber-500 hover:scale-110 transition-transform focus:outline-none" title="Sunset Amber"></button>
+        <button onclick="setTheme('theme-electric-violet')" class="w-6 h-6 rounded-full bg-purple-500 hover:scale-110 transition-transform focus:outline-none" title="Electric Violet"></button>
+        <button onclick="setTheme('theme-mint-emerald')" class="w-6 h-6 rounded-full bg-teal-400 hover:scale-110 transition-transform focus:outline-none" title="Mint Emerald"></button>
+        <button onclick="setTheme('theme-solar-yellow')" class="w-6 h-6 rounded-full bg-yellow-400 hover:scale-110 transition-transform focus:outline-none" title="Solar Yellow"></button>
+        <button onclick="setTheme('theme-oled-red')" class="w-6 h-6 rounded-full bg-red-600 hover:scale-110 transition-transform focus:outline-none" title="Night Red"></button>
+        <button onclick="setTheme('theme-cyber-cyan')" class="w-6 h-6 rounded-full bg-cyan-400 hover:scale-110 transition-transform focus:outline-none" title="Cyber Cyan"></button>
+
+        <div class="relative">
+          <button id="custom-picker-btn" onclick="toggleCustomColorPicker(event)" class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 hover:scale-110 transition-transform focus:outline-none ring-1 ring-white/40 flex items-center justify-center" title="Custom Colors">
+            <i data-lucide="palette" class="w-3 h-3 text-white pointer-events-none"></i>
+          </button>
+
+          <div id="custom-picker-popover" class="hidden absolute bottom-10 left-1/2 -translate-x-1/2 bg-zinc-900 border border-zinc-700/80 rounded-2xl p-3 shadow-2xl z-50 flex gap-3 items-center backdrop-blur-xl">
+            <div class="flex flex-col items-center gap-1">
+              <span class="text-[10px] text-zinc-400 font-medium uppercase">Primary</span>
+              <input type="color" id="custom-primary" value="#6366f1" class="w-7 h-7 rounded-lg bg-transparent cursor-pointer border-0" onchange="applyCustomColors(); setTheme('theme-custom');">
+            </div>
+            <div class="w-px h-8 bg-zinc-800"></div>
+            <div class="flex flex-col items-center gap-1">
+              <span class="text-[10px] text-zinc-400 font-medium uppercase">Secondary</span>
+              <input type="color" id="custom-secondary" value="#a855f7" class="w-7 h-7 rounded-lg bg-transparent cursor-pointer border-0" onchange="applyCustomColors(); setTheme('theme-custom');">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="toggleSettingsModal()" class="hover:text-white transition-colors p-1 flex items-center gap-1 font-medium shrink-0" title="Clock Settings">
+        <i data-lucide="sliders" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Settings</span>
+      </button>
+
+      <button onclick="toggleFullscreen()" class="hover:text-white transition-colors p-1 shrink-0" title="Toggle Fullscreen">
+        <i data-lucide="maximize" id="fullscreen-icon" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </footer>
+
+  <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-md w-full mx-4 text-zinc-200 shadow-2xl relative">
+
+      <button onclick="toggleSettingsModal()" class="absolute top-5 right-5 text-zinc-400 hover:text-white p-2">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+        <i data-lucide="settings" class="w-5 h-5 text-blue-500"></i> Clock Configuration
+      </h2>
+
+      <div class="space-y-5">
+        <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+          <span class="font-medium text-sm sm:text-base">24-Hour Format</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="toggle-24h" checked class="sr-only peer" onchange="updateSettings()">
+            <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+
+        <div class="py-2 border-b border-zinc-800">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-medium text-sm sm:text-base">Glow Level</span>
+            <span id="glow-value" class="text-xs text-blue-400 font-mono">12px</span>
+          </div>
+          <input type="range" id="glow-slider" min="0" max="25" step="1" value="12" class="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer" oninput="updateSettings()">
+        </div>
+
+        <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+          <span class="font-medium text-sm sm:text-base">Font Family</span>
+          <select id="font-selector" onchange="updateSettings()" class="bg-zinc-800 border border-zinc-700 text-sm rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white">
+            <option value="'Fredoka', sans-serif">Fredoka (Rounded)</option>
+            <option value="'Nunito', sans-serif">Nunito (Super Bold)</option>
+            <option value="'Outfit', sans-serif">Outfit (Modern)</option>
+          </select>
+        </div>
+
+        <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+          <span class="font-medium text-sm sm:text-base">Display Seconds</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="toggle-seconds" checked class="sr-only peer" onchange="updateSettings()">
+            <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+
+        <div class="flex justify-between items-center py-2">
+          <span class="font-medium text-sm sm:text-base">Always Display Date</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="toggle-always-date" checked class="sr-only peer" onchange="updateSettings()">
+            <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <button onclick="toggleSettingsModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-semibold transition-colors">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      is24Hour: true,
+      showSeconds: true,
+      alwaysShowDate: true,
+      glowSize: 12,
+      fontFamily: "'Fredoka', sans-serif",
+      currentTheme: 'theme-blue',
+      customPrimary: '#6366f1',
+      customSecondary: '#a855f7'
+    };
+
+    const clockDisplay = document.getElementById('clock-display');
+    const h1 = document.getElementById('digit-h1');
+    const h2 = document.getElementById('digit-h2');
+    const m1 = document.getElementById('digit-m1');
+    const m2 = document.getElementById('digit-m2');
+    const s1 = document.getElementById('digit-s1');
+    const s2 = document.getElementById('digit-s2');
+    const secondsWrapper = document.getElementById('seconds-wrapper');
+    const colon = document.getElementById('colon');
+    const topBar = document.getElementById('top-bar');
+    const dateDisplay = document.getElementById('date-display');
+    const ampmDisplay = document.getElementById('ampm-display');
+
+    let lastDateString = '';
+    let activityTimeout;
+    const controls = document.querySelectorAll('.controls-overlay');
+
+    function applyCustomColors() {
+      const primary = document.getElementById('custom-primary').value;
+      const secondary = document.getElementById('custom-secondary').value;
+
+      state.customPrimary = primary;
+      state.customSecondary = secondary;
+
+      document.documentElement.style.setProperty('--custom-primary', primary);
+      document.documentElement.style.setProperty('--custom-secondary', secondary);
+    }
+
+    function toggleCustomColorPicker(e) {
+      if (e) e.stopPropagation();
+      const popover = document.getElementById('custom-picker-popover');
+      popover.classList.toggle('hidden');
+      setTheme('theme-custom');
+    }
+
+    document.addEventListener('click', (e) => {
+      const popover = document.getElementById('custom-picker-popover');
+      const btn = document.getElementById('custom-picker-btn');
+      if (popover && !popover.classList.contains('hidden') && !popover.contains(e.target) && e.target !== btn) {
+        popover.classList.add('hidden');
+      }
+    });
+
+    function showControls() {
+      controls.forEach(el => el.classList.remove('controls-hidden'));
+      document.body.style.cursor = 'default';
+      clearTimeout(activityTimeout);
+
+      activityTimeout = setTimeout(() => {
+        const isModalOpen = !document.getElementById('settings-modal').classList.contains('opacity-0');
+        if (!isModalOpen) {
+          controls.forEach(el => {
+            if (el.id === 'top-bar' && state.alwaysShowDate) {
+              return;
+            }
+            el.classList.add('controls-hidden');
+          });
+          document.body.style.cursor = 'none';
+        }
+      }, 1500);
+    }
+
+    window.addEventListener('mousemove', showControls);
+    window.addEventListener('touchstart', showControls);
+    window.addEventListener('keydown', showControls);
+
+    lucide.createIcons();
+
+    function updateDateDisplay(dateString) {
+      if (dateString === lastDateString) return;
+      lastDateString = dateString;
+
+      dateDisplay.innerHTML = '';
+      const animClasses = ['date-char-1', 'date-char-2', 'date-char-3', 'date-char-4'];
+
+      [...dateString].forEach((char, index) => {
+        const span = document.createElement('span');
+        span.className = `date-char ${animClasses[index % animClasses.length]}`;
+        span.style.animationDelay = `${(index * 0.15).toFixed(2)}s`;
+        span.innerHTML = char === ' ' ? '&nbsp;' : char;
+        dateDisplay.appendChild(span);
+      });
+    }
+
+    function renderClock() {
+      const now = new Date();
+
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      if (!state.is24Hour) {
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        ampmDisplay.textContent = ampm;
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+      } else {
+        ampmDisplay.textContent = '';
+      }
+
+      const hStr = String(hours).padStart(2, '0');
+      const mStr = String(minutes).padStart(2, '0');
+      const sStr = String(seconds).padStart(2, '0');
+
+      h1.textContent = hStr[0];
+      h2.textContent = hStr[1];
+      m1.textContent = mStr[0];
+      m2.textContent = mStr[1];
+
+      if (state.showSeconds) {
+        s1.textContent = sStr[0];
+        s2.textContent = sStr[1];
+      }
+
+      const options = { weekday: 'short', month: 'short', day: 'numeric' };
+      updateDateDisplay(now.toLocaleDateString('en-US', options));
+    }
+
+    function setTheme(themeName) {
+      clockDisplay.className = `digits-container ${themeName}`;
+      document.body.className = `bg-black flex items-center justify-center min-h-screen relative overflow-hidden ${themeName}`;
+      state.currentTheme = themeName;
+    }
+
+    function updateSettings() {
+      state.is24Hour = document.getElementById('toggle-24h').checked;
+      state.showSeconds = document.getElementById('toggle-seconds').checked;
+      state.alwaysShowDate = document.getElementById('toggle-always-date').checked;
+      state.glowSize = document.getElementById('glow-slider').value;
+      state.fontFamily = document.getElementById('font-selector').value;
+
+      document.getElementById('glow-value').textContent = `${state.glowSize}px`;
+      document.documentElement.style.setProperty('--glow-size', `${state.glowSize}px`);
+
+      const digits = document.querySelectorAll('.digit');
+      digits.forEach(d => {
+        d.style.fontFamily = state.fontFamily;
+      });
+
+      colon.style.fontFamily = state.fontFamily;
+      dateDisplay.style.fontFamily = state.fontFamily;
+      ampmDisplay.style.fontFamily = state.fontFamily;
+
+      if (state.alwaysShowDate) {
+        topBar.classList.remove('controls-hidden');
+      }
+
+      if (state.showSeconds) {
+        secondsWrapper.classList.remove('hidden');
+        secondsWrapper.classList.add('flex');
+      } else {
+        secondsWrapper.classList.add('hidden');
+        secondsWrapper.classList.remove('flex');
+      }
+
+      renderClock();
+    }
+
+    function toggleSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      const isHidden = modal.classList.contains('opacity-0');
+
+      if (isHidden) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        showControls();
+      } else {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn(`Fullscreen error: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    window.addEventListener('load', () => {
+      applyCustomColors();
+      setTheme('theme-blue');
+      updateSettings();
+      renderClock();
+      setInterval(renderClock, 1000);
+      showControls();
+    });
+  </script>
+</body>
+</html>
